@@ -11,7 +11,8 @@ RUN npm install
 # Copy application code
 COPY . .
 
-# Port configured via ENV variable (no external exposure needed for Umbrel)
+# Set port environment variable
+ENV PORT=1923
 
 # Start the application
 CMD ["npm", "start"]
