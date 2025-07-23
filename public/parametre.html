@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramètres - LorcanaLocalManager</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <main class="main-content">
+        <div class="container">
+            <h1>⚙️ Paramètres</h1>
+            <p>Configurez votre expérience LorcanaLocalManager</p>
+        </div>
+
+        <div class="settings-section">
+            <div class="setting-card">
+                <h3>🌐 Langue / Language</h3>
+                <div class="form-group">
+                    <label for="language-select">Sélectionnez votre langue:</label>
+                    <select id="language-select">
+                        <option value="fr">Français</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="saveLanguage()">Sauvegarder</button>
+            </div>
+
+            <div class="setting-card">
+                <h3>👤 Profil Utilisateur</h3>
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur:</label>
+                    <input type="text" id="username" placeholder="Votre nom d'utilisateur">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" placeholder="votre@email.com">
+                </div>
+                <button class="btn" onclick="saveProfile()">Sauvegarder le profil</button>
+            </div>
+
+            <div class="setting-card">
+                <h3>🎨 Préférences d'affichage</h3>
+                <div class="form-group">
+                    <label for="cards-per-page">Cartes par page:</label>
+                    <select id="cards-per-page">
+                        <option value="12">12</option>
+                        <option value="24">24</option>
+                        <option value="36">36</option>
+                        <option value="48">48</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="default-view">Vue par défaut:</label>
+                    <select id="default-view">
+                        <option value="grid">Grille</option>
+                        <option value="list">Liste</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="saveDisplayPreferences()">Sauvegarder</button>
+            </div>
+
+            <div class="setting-card">
+                <h3>💾 Données</h3>
+                <div class="data-actions">
+                    <button class="btn" onclick="exportData()">Exporter les données</button>
+                    <button class="btn" onclick="importData()">Importer les données</button>
+                    <button class="btn btn-danger" onclick="resetData()">Réinitialiser</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-message" id="status-message"></div>
+    </main>
+    
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // Load header and footer
+        async function loadComponent(elementId, filePath) {
+            try {
+                const response = await fetch(filePath);
+                const html = await response.text();
+                document.getElementById(elementId).innerHTML = html;
+                
+                // Update active nav link
+                if (elementId === 'header-placeholder') {
+                    setTimeout(() => {
+                        const navLinks = document.querySelectorAll('.nav-link');
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const parametreLink = document.querySelector('a[href="/parametre"]');
+                        if (parametreLink) parametreLink.classList.add('active');
+                    }, 100);
+                }
+            } catch (error) {
+                console.error(`Error loading ${filePath}:`, error);
+            }
+        }
+
+        // Load settings from server
+        async function loadSettings() {
+            try {
+                const response = await fetch('/api/settings');
+                if (response.ok) {
+                    const settings = await response.json();
+                    
+                    // Populate form fields
+                    if (settings.language) {
+                        document.getElementById('language-select').value = settings.language;
+                    }
+                    if (settings.username) {
+                        document.getElementById('username').value = settings.username;
+                    }
+                    if (settings.email) {
+                        document.getElementById('email').value = settings.email;
+                    }
+                    if (settings.cardsPerPage) {
+                        document.getElementById('cards-per-page').value = settings.cardsPerPage;
+                    }
+                    if (settings.defaultView) {
+                        document.getElementById('default-view').value = settings.defaultView;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading settings:', error);
+            }
+        }
+
+        // Save functions
+        async function saveLanguage() {
+            const language = document.getElementById('language-select').value;
+            await saveSettingToServer('language', language);
+            showStatus('Langue sauvegardée avec succès!');
+        }
+
+        async function saveProfile() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            
+            await saveSettingToServer('username', username);
+            await saveSettingToServer('email', email);
+            showStatus('Profil sauvegardé avec succès!');
+        }
+
+        async function saveDisplayPreferences() {
+            const cardsPerPage = document.getElementById('cards-per-page').value;
+            const defaultView = document.getElementById('default-view').value;
+            
+            await saveSettingToServer('cardsPerPage', cardsPerPage);
+            await saveSettingToServer('defaultView', defaultView);
+            showStatus('Préférences d\'affichage sauvegardées!');
+        }
+
+        // Helper function to save setting to server
+        async function saveSettingToServer(key, value) {
+            try {
+                const response = await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ key, value })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to save setting');
+                }
+            } catch (error) {
+                console.error('Error saving setting:', error);
+                showStatus('Erreur lors de la sauvegarde', 'error');
+            }
+        }
+
+        // Data management functions
+        function exportData() {
+            // TODO: Implement data export
+            showStatus('Fonctionnalité d\'export en cours de développement');
+        }
+
+        function importData() {
+            // TODO: Implement data import
+            showStatus('Fonctionnalité d\'import en cours de développement');
+        }
+
+        function resetData() {
+            if (confirm('Êtes-vous sûr de vouloir réinitialiser toutes les données ?')) {
+                // TODO: Implement data reset
+                showStatus('Fonctionnalité de réinitialisation en cours de développement');
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type = 'success') {
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message ${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Load components when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComponent('header-placeholder', '/header.html');
+            loadComponent('footer-placeholder', '/footer.html');
+            loadSettings();
+        });
+    </script>
+
+    <style>
+        .settings-section {
+            display: grid;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .setting-card {
+            background-color: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .setting-card h3 {
+            color: var(--accent-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .data-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-danger {
+            background-color: var(--accent-secondary);
+        }
+        
+        .btn-danger:hover {
+            background-color: #e55555;
+        }
+        
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .status-message.success {
+            background-color: #4caf50;
+        }
+        
+        .status-message.error {
+            background-color: var(--accent-secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .data-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

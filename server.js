@@ -1,8 +1,36 @@
 const express = require('express');
 const path = require('path');
+const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+// Middleware for JSON parsing
+app.use(express.json());
+
+// Initialize SQLite database
+const db = new sqlite3.Database('./data/settings.db', (err) => {
+  if (err) {
+    console.error('❌ Error opening database:', err.message);
+  } else {
+    console.log('📦 Connected to SQLite database');
+    
+    // Create settings table if it doesn't exist
+    db.run(`CREATE TABLE IF NOT EXISTS settings (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      key TEXT UNIQUE NOT NULL,
+      value TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )`, (err) => {
+      if (err) {
+        console.error('❌ Error creating table:', err.message);
+      } else {
+        console.log('✅ Settings table ready');
+      }
+    });
+  }
+});
 
 // Add middleware for debugging (must be first)
 app.use((req, res, next) => {
@@ -18,9 +46,70 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', port: PORT });
 });
 
-// Serve main page
+// API Routes for settings
+app.get('/api/settings', (req, res) => {
+  db.all('SELECT key, value FROM settings', [], (err, rows) => {
+    if (err) {
+      console.error('❌ Error fetching settings:', err.message);
+      res.status(500).json({ error: 'Database error' });
+      return;
+    }
+    
+    const settings = {};
+    rows.forEach(row => {
+      settings[row.key] = row.value;
+    });
+    
+    res.json(settings);
+  });
+});
+
+app.post('/api/settings', (req, res) => {
+  const { key, value } = req.body;
+  
+  if (!key || value === undefined) {
+    return res.status(400).json({ error: 'Key and value are required' });
+  }
+  
+  db.run(
+    'INSERT OR REPLACE INTO settings (key, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)',
+    [key, value],
+    function(err) {
+      if (err) {
+        console.error('❌ Error saving setting:', err.message);
+        res.status(500).json({ error: 'Database error' });
+        return;
+      }
+      
+      res.json({ success: true, key, value });
+    }
+  );
+});
+
+// Serve pages
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/cartes', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'cartes.html'));
+});
+
+app.get('/parametre', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'parametre.html'));
+});
+
+// Redirect disabled pages for now
+app.get('/produits', (req, res) => {
+  res.redirect('/?message=soon');
+});
+
+app.get('/mes-achats', (req, res) => {
+  res.redirect('/?message=soon');
+});
+
+app.get('/mes-ventes', (req, res) => {
+  res.redirect('/?message=soon');
 });
 
 // Start server

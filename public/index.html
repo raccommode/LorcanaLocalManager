@@ -4,33 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LorcanaLocalManager</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            text-align: center;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            margin: 0;
-            font-size: 2.5em;
-        }
-    </style>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>LorcanaLocalManager</h1>
-    </div>
+    <div id="header-placeholder"></div>
+    
+    <main class="main-content">
+        <div class="container">
+            <h1>Bienvenue sur LorcanaLocalManager</h1>
+            <p>Votre gestionnaire personnel pour les cartes Disney Lorcana</p>
+            <p>Explorez votre collection, gérez vos achats et ventes, et découvrez toutes les cartes disponibles.</p>
+        </div>
+    </main>
+    
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // Load header and footer
+        async function loadComponent(elementId, filePath) {
+            try {
+                const response = await fetch(filePath);
+                const html = await response.text();
+                document.getElementById(elementId).innerHTML = html;
+            } catch (error) {
+                console.error(`Error loading ${filePath}:`, error);
+            }
+        }
+
+        // Load components when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComponent('header-placeholder', '/header.html');
+            loadComponent('footer-placeholder', '/footer.html');
+        });
+    </script>
 </body>
 </html>

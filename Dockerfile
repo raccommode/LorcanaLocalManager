@@ -11,6 +11,9 @@ RUN npm install
 # Copy application code
 COPY . .
 
+# Create data directory for SQLite database
+RUN mkdir -p data
+
 # Set port environment variable
 ENV PORT=8080
 

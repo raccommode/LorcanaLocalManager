@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes - LorcanaLocalManager</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <main class="main-content">
+        <div class="container">
+            <h1>🃏 Catalogue des Cartes Lorcana</h1>
+            <p>Explorez toutes les cartes Disney Lorcana disponibles</p>
+        </div>
+
+        <div class="filters-section">
+            <div class="filter-group">
+                <label for="set-filter">Set:</label>
+                <select id="set-filter">
+                    <option value="">Tous les sets</option>
+                    <option value="TFC">The First Chapter</option>
+                    <option value="ROF">Rise of the Floodborn</option>
+                    <option value="ITI">Into the Inklands</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="color-filter">Couleur:</label>
+                <select id="color-filter">
+                    <option value="">Toutes les couleurs</option>
+                    <option value="Amber">Ambre</option>
+                    <option value="Amethyst">Améthyste</option>
+                    <option value="Emerald">Émeraude</option>
+                    <option value="Ruby">Rubis</option>
+                    <option value="Sapphire">Saphir</option>
+                    <option value="Steel">Acier</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label for="rarity-filter">Rareté:</label>
+                <select id="rarity-filter">
+                    <option value="">Toutes les raretés</option>
+                    <option value="Common">Commune</option>
+                    <option value="Uncommon">Peu commune</option>
+                    <option value="Rare">Rare</option>
+                    <option value="Super Rare">Super rare</option>
+                    <option value="Legendary">Légendaire</option>
+                    <option value="Enchanted">Enchantée</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="cards-grid" class="cards-grid">
+            <div class="loading">Chargement des cartes...</div>
+        </div>
+    </main>
+    
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // Load header and footer
+        async function loadComponent(elementId, filePath) {
+            try {
+                const response = await fetch(filePath);
+                const html = await response.text();
+                document.getElementById(elementId).innerHTML = html;
+                
+                // Update active nav link
+                if (elementId === 'header-placeholder') {
+                    setTimeout(() => {
+                        const navLinks = document.querySelectorAll('.nav-link');
+                        navLinks.forEach(link => link.classList.remove('active'));
+                        const cartesLink = document.querySelector('a[href="/cartes"]');
+                        if (cartesLink) cartesLink.classList.add('active');
+                    }, 100);
+                }
+            } catch (error) {
+                console.error(`Error loading ${filePath}:`, error);
+            }
+        }
+
+        // Sample Lorcana cards data
+        const sampleCards = [
+            {
+                name: "Mickey Mouse - Brave Little Tailor",
+                set: "TFC",
+                color: "Ruby",
+                rarity: "Super Rare",
+                cost: 4,
+                strength: 4,
+                willpower: 5,
+                type: "Storyborn • Hero"
+            },
+            {
+                name: "Elsa - Ice Queen",
+                set: "TFC",
+                color: "Sapphire",
+                rarity: "Legendary",
+                cost: 8,
+                strength: 4,
+                willpower: 6,
+                type: "Storyborn • Queen • Sorcerer"
+            },
+            {
+                name: "Simba - Rightful Heir",
+                set: "TFC",
+                color: "Amber",
+                rarity: "Rare",
+                cost: 5,
+                strength: 4,
+                willpower: 5,
+                type: "Storyborn • Hero • Prince"
+            },
+            {
+                name: "Belle - Hidden Archer",
+                set: "ROF",
+                color: "Emerald",
+                rarity: "Uncommon",
+                cost: 3,
+                strength: 2,
+                willpower: 3,
+                type: "Dreamborn • Hero • Princess"
+            },
+            {
+                name: "Maui - Hero to All",
+                set: "ITI",
+                color: "Amber",
+                rarity: "Common",
+                cost: 5,
+                strength: 5,
+                willpower: 4,
+                type: "Storyborn • Deity • Hero"
+            }
+        ];
+
+        function displayCards(cards) {
+            const cardsGrid = document.getElementById('cards-grid');
+            
+            if (cards.length === 0) {
+                cardsGrid.innerHTML = '<div class="no-results">Aucune carte trouvée</div>';
+                return;
+            }
+            
+            cardsGrid.innerHTML = cards.map(card => `
+                <div class="card-item">
+                    <h3>${card.name}</h3>
+                    <div class="card-details">
+                        <p><strong>Set:</strong> ${card.set}</p>
+                        <p><strong>Couleur:</strong> ${card.color}</p>
+                        <p><strong>Rareté:</strong> ${card.rarity}</p>
+                        <p><strong>Coût:</strong> ${card.cost}</p>
+                        <p><strong>Force:</strong> ${card.strength} / <strong>Volonté:</strong> ${card.willpower}</p>
+                        <p><strong>Type:</strong> ${card.type}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCards() {
+            const setFilter = document.getElementById('set-filter').value;
+            const colorFilter = document.getElementById('color-filter').value;
+            const rarityFilter = document.getElementById('rarity-filter').value;
+            
+            const filteredCards = sampleCards.filter(card => {
+                return (!setFilter || card.set === setFilter) &&
+                       (!colorFilter || card.color === colorFilter) &&
+                       (!rarityFilter || card.rarity === rarityFilter);
+            });
+            
+            displayCards(filteredCards);
+        }
+
+        // Load components when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadComponent('header-placeholder', '/header.html');
+            loadComponent('footer-placeholder', '/footer.html');
+            
+            // Display initial cards
+            setTimeout(() => {
+                displayCards(sampleCards);
+            }, 500);
+            
+            // Add event listeners for filters
+            document.getElementById('set-filter').addEventListener('change', filterCards);
+            document.getElementById('color-filter').addEventListener('change', filterCards);
+            document.getElementById('rarity-filter').addEventListener('change', filterCards);
+        });
+    </script>
+
+    <style>
+        .filters-section {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        
+        .filter-group select {
+            padding: 0.5rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+        }
+        
+        .loading, .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+        
+        .card-details p {
+            margin: 0.5rem 0;
+            color: var(--text-secondary);
+        }
+        
+        .card-item h3 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+    </style>
+</body>
+</html>
