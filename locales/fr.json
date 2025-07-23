@@ -1,0 +1,141 @@
+{
+  "app": {
+    "title": "LorcanaLocalManager",
+    "subtitle": "Gestionnaire local de cartes Disney Lorcana",
+    "version": "Version"
+  },
+  "navigation": {
+    "cards": "Cartes",
+    "collections": "Collections",
+    "import": "Importer",
+    "export": "Exporter",
+    "settings": "Paramètres"
+  },
+  "cards": {
+    "title": "Catalogue de cartes",
+    "search": "Rechercher une carte...",
+    "filters": {
+      "all_sets": "Toutes les extensions",
+      "all_colors": "Toutes les couleurs",
+      "all_rarities": "Toutes les raretés",
+      "colors": {
+        "amber": "Ambre",
+        "amethyst": "Améthyste", 
+        "emerald": "Émeraude",
+        "ruby": "Rubis",
+        "sapphire": "Saphir",
+        "steel": "Acier"
+      },
+      "rarities": {
+        "common": "Commune",
+        "uncommon": "Inhabituelle", 
+        "rare": "Rare",
+        "super_rare": "Super Rare",
+        "legendary": "Légendaire",
+        "enchanted": "Enchantée"
+      }
+    },
+    "details": {
+      "set": "Extension",
+      "color": "Couleur",
+      "rarity": "Rareté", 
+      "cost": "Coût",
+      "lore": "Folklore",
+      "price": "Prix",
+      "not_specified": "Non spécifié",
+      "not_available": "N/A"
+    },
+    "stats": {
+      "cards_found": "cartes trouvées",
+      "total_cards": "Total des cartes"
+    },
+    "actions": {
+      "add_to_collection": "Ajouter à la collection",
+      "view_details": "Voir les détails",
+      "view_on_cardtrader": "Voir sur CardTrader"
+    }
+  },
+  "collections": {
+    "title": "Mes collections",
+    "create": "Créer une collection",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "view": "Voir",
+    "empty": "Aucune collection trouvée",
+    "form": {
+      "name": "Nom de la collection",
+      "description": "Description",
+      "name_required": "Le nom est requis",
+      "create_button": "Créer",
+      "update_button": "Mettre à jour",
+      "cancel_button": "Annuler"
+    },
+    "details": {
+      "cards_count": "cartes",
+      "created": "Créé le",
+      "updated": "Modifié le"
+    }
+  },
+  "import": {
+    "title": "Importer des données",
+    "cards": {
+      "title": "Importer les cartes",
+      "description": "Importez un fichier JSON contenant les données des cartes",
+      "button": "Choisir le fichier",
+      "import_button": "Importer les cartes"
+    },
+    "sets": {
+      "title": "Importer les extensions",
+      "description": "Importez un fichier JSON contenant les données des extensions",
+      "button": "Choisir le fichier", 
+      "import_button": "Importer les extensions"
+    },
+    "prices": {
+      "title": "Importer les prix",
+      "description": "Importez un fichier JSON contenant les données de prix",
+      "button": "Choisir le fichier",
+      "import_button": "Importer les prix"
+    },
+    "status": {
+      "success": "Importation réussie",
+      "error": "Erreur d'importation",
+      "processing": "Traitement en cours..."
+    }
+  },
+  "export": {
+    "title": "Exporter des données",
+    "description": "Exportez toutes vos données vers un fichier",
+    "format": "Format",
+    "button": "Télécharger l'export"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": {
+      "title": "Langue",
+      "french": "Français",
+      "english": "English"
+    },
+    "data": {
+      "title": "Gestion des données",
+      "backup": "Créer une sauvegarde",
+      "restore": "Restaurer depuis une sauvegarde",
+      "clear": "Effacer toutes les données"
+    }
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "clear": "Effacer",
+    "no_results": "Aucun résultat trouvé",
+    "confirm_delete": "Êtes-vous sûr de vouloir supprimer ?",
+    "image_not_available": "Image non disponible"
+  }
+}
