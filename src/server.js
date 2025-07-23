@@ -11,7 +11,7 @@ const collectionRoutes = require('./routes/collections');
 const dataRoutes = require('./routes/data');
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 1923;
 const DATA_PATH = process.env.DATA_PATH || path.join(__dirname, '../data');
 
 // Middleware

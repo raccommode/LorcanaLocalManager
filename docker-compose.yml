@@ -4,17 +4,17 @@ services:
   lorcanalocalmanager:
     build: .
     ports:
-      - "8080:8080"
+      - "1923:1923"
     volumes:
       - ./data:/app/data
       - ./config:/app/config
     environment:
       - NODE_ENV=production
-      - PORT=8080
+      - PORT=1923
       - DATA_PATH=/app/data
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:1923/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
