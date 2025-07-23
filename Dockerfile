@@ -12,7 +12,7 @@ RUN npm install
 COPY . .
 
 # Set port environment variable
-ENV PORT=1923
+ENV PORT=8080
 
 # Start the application
 CMD ["npm", "start"]
